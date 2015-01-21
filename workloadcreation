@@ -1,0 +1,53 @@
+#!/bin/bash
+
+set -xv
+fun_CreateWorkload()
+{
+#echo "Creating CNext Work load"
+#STATUS=`curl -sL -w "%{http_code}\\n" http://www.google.com`
+#echo "$STATUS"
+#curl=$(curl -I http://e552d416-cac3-4911-a952-1833e3dfcb1d:e552d416-cac3-4911-a952-1833e3dfcb1d@172.16.1.104:8070/workload/)
+#echo $curl
+
+Endpointresponse=$(curl -o /dev/null --silent --head --write-out '%{http_code}\n' http://"$Endpoint"/workload/)
+
+if [ $Endpointresponse -eq "200" ] 
+then
+#echo "Valid URL"
+echo "Enter a Workload id: E.G WL-5DFE1DVDF"
+read workloadinputid
+workloadid=$(curl -X POST -H 'Content-Type: application/json' -d '{"name":"'$workloadinputid'","description":"'$workloadinputid'"}' http://"$Endpoint"/workload/)
+echo "workloadid"
+else
+echo "Invalid URL"
+echo "Please check your URL"
+exit
+fi 
+}
+
+Delete_Workload()
+{
+workloadid=$(curl -X DELETE  http://e552d416-cac3-4911-a952-1833e3dfcb1d:e552d416-cac3-4911-a952-1833e3dfcb1d@172.16.1.104:8070/workload/1f43d85d-76a6-4160-8a2f-4b62a4431b80)
+echo "$workloadid"
+}
+
+#fun_ErrorHandling()
+#{
+#    400: These errors will return a descriptive message detailing why the API call failed. It is usually caused by invalid parameters given.
+#    500: Please report this error to ComputeNext support (support@computenext.com) so that we can track the cause of the problem.
+#    404: The resource being searched for was not found in the system.
+#    403: User does not have the correct role to access for a particular resource.
+#
+#}
+#################################### Main Script ######################################
+
+echo "Welcome to Script"
+
+echo "Enter API Endpoint:"
+read Endpoint
+fun_CreateWorkload
+#APIlist()
+#{
+#}
+
+$@
